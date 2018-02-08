@@ -27,6 +27,7 @@ tol = args['t']
 
 print("target name: " + targfname)
 print("video filename: " + vidfname)
+print("tolerance: " + str(tol))
 
 print("OpenCL: " + str(cv2.ocl.haveOpenCL()))
 if(cv2.ocl.haveOpenCL()):
@@ -52,6 +53,7 @@ facefound = False
 vidheight = input_video.get(4)
 vidwidth = input_video.get(3)
 vidfps = input_video.get(cv2.CAP_PROP_FPS)
+totalframes = input_video.get(cv2.CAP_PROP_FRAME_COUNT)
 outputsize = 256, 256
 print("width: " + str(vidwidth) + ", height: " + str(vidheight) + ".")
 
@@ -73,7 +75,8 @@ while(input_video.isOpened()):
 	if not ret:
 		break
 
-	print("Checking frame " + str(int(framenum)) + ".")
+	percentage = (framenum/totalframes)*100
+	print("Checking frame " + str(int(framenum)) + str(" (%.2f%%)" % percentage))
 	
 	rgb_frame = frame[:, :, ::-1]
 	
