@@ -14,5 +14,7 @@ Python script for extracting faces from video files
 ## Dependencies
 ***
 numpy
+
 face_recognition
+
 opencv-python
