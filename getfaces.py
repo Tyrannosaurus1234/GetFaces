@@ -8,7 +8,7 @@ import math
 
 targfname = input("Target image filename: ")
 vidfname = input("Input video filename: ")
-tol = input("Target recognition tolerance (lower is more accurate but may miss faces, 0.1-1.0): ")
+tol = input("Target recognition tolerance (lower is more accurate but may miss faces, 0.1-1.0, recommended default 0.6): ")
 print("target name: " + targfname)
 print("video filename: " + vidfname)
 
