@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser();
 parser.add_argument('-i', type=str, help='Image of target face to scan for.', required=True)
 parser.add_argument('-v', type=str, help='Video to process', required=True)
 parser.add_argument('-t', type=float, help='Tolerance of face detection, lower is stricter. (0.1-1.0)', default=0.6)
+parser.add_argument('-f', type=int, help='Amount of frames per second to extract.', default=1)
 args = vars(parser.parse_args())
 
 if args['t'] > 1.0:
@@ -24,6 +25,7 @@ elif args['t'] < 0.1:
 targfname = args['i']
 vidfname = args['v']
 tol = args['t']
+xfps = args['f']
 
 print("target name: " + targfname)
 print("video filename: " + vidfname)
@@ -53,6 +55,10 @@ facefound = False
 vidheight = input_video.get(4)
 vidwidth = input_video.get(3)
 vidfps = input_video.get(cv2.CAP_PROP_FPS)
+
+if xfps > vidfps:
+	xfps = vidfps
+
 totalframes = input_video.get(cv2.CAP_PROP_FRAME_COUNT)
 outputsize = 256, 256
 print("width: " + str(vidwidth) + ", height: " + str(vidheight) + ".")
@@ -68,8 +74,8 @@ def random_string(length):
 os.chdir(str(os.path.splitext(targfname)[0]) + "_output")
 
 while(input_video.isOpened()):
-	input_video.set(1, (framenum + vidfps))
-	framenum += vidfps
+	input_video.set(1, (framenum + (vidfps/xfps)))
+	framenum += vidfps/xfps
 	ret, frame = input_video.read()
 
 	if not ret:
