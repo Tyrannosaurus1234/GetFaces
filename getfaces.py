@@ -7,9 +7,9 @@ import os
 import math
 import argparse
 
-#targfname = input("Target image filename: ")
-#vidfname = input("Input video filename: ")
-#tol = input("Target recognition tolerance (lower is more accurate but may miss faces, 0.1-1.0): ")
+
+os.system('cls' if os.name=='nt' else 'clear')
+
 parser = argparse.ArgumentParser();
 parser.add_argument('-i', type=str, help='Image of target face to scan for.', required=True)
 parser.add_argument('-v', type=str, help='Video to process', required=True)
@@ -27,15 +27,13 @@ vidfname = args['v']
 tol = args['t']
 xfps = args['f']
 
-print("target name: " + targfname)
-print("video filename: " + vidfname)
-print("tolerance: " + str(tol))
+print("Target filename: " + targfname + ".")
+print("Video filename: " + vidfname + ".")
+print("Tolerance: " + str(tol) + ".")
 
-print("OpenCL: " + str(cv2.ocl.haveOpenCL()))
 if(cv2.ocl.haveOpenCL()):
-	print("Attempting to use OpenCL...")
 	cv2.ocl.setUseOpenCL(True)
-	print("Using OpenCL: " + str(cv2.ocl.useOpenCL()))
+	print("Using OpenCL: " + str(cv2.ocl.useOpenCL()) + ".")
 
 target_image = face_recognition.load_image_file(targfname)
 
@@ -51,7 +49,6 @@ except IndexError:
 input_video = cv2.VideoCapture(vidfname)
 
 framenum = 0
-facefound = False
 vidheight = input_video.get(4)
 vidwidth = input_video.get(3)
 vidfps = input_video.get(cv2.CAP_PROP_FPS)
@@ -61,7 +58,7 @@ if xfps > vidfps:
 
 totalframes = input_video.get(cv2.CAP_PROP_FRAME_COUNT)
 outputsize = 256, 256
-print("width: " + str(vidwidth) + ", height: " + str(vidheight) + ".")
+print("Frame Width: " + str(vidwidth) + ", Height: " + str(vidheight) + ".")
 
 known_faces = [
 	target_encoding
@@ -113,6 +110,6 @@ while(input_video.isOpened()):
 				cheight, cwidth, cchannels = croppedframe.shape
 				if (cheight < 256) or (cwidth < 256):
 					croppedframe = cv2.resize(croppedframe, outputsize, interpolation=cv2.INTER_CUBIC)
-				print("writing image")
+				print("Writing image.")
 				cv2.imwrite(("0" + random_string(15) + ".jpg"), croppedframe, [int(cv2.IMWRITE_JPEG_QUALITY), 98])
 input_video.release()
