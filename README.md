@@ -17,7 +17,7 @@ The video to be scanned *e.g. interview.mkv*
 
 **TOLERANCE**
 
-A value from 0.1 to 1.0 that represents the tolerance of the face detector, lower values make it more strict. A default value of 0.6 is recommended.
+A value from 0.1 to 1.0 that represents the tolerance of the face detector, lower values make it more strict. If left blank will default to 0.6.
 
 ## Dependencies
 ***
