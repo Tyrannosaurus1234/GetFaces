@@ -5,10 +5,26 @@ import random
 import string
 import os
 import math
+import argparse
 
-targfname = input("Target image filename: ")
-vidfname = input("Input video filename: ")
-tol = input("Target recognition tolerance (lower is more accurate but may miss faces, 0.1-1.0, recommended default 0.6): ")
+#targfname = input("Target image filename: ")
+#vidfname = input("Input video filename: ")
+#tol = input("Target recognition tolerance (lower is more accurate but may miss faces, 0.1-1.0): ")
+parser = argparse.ArgumentParser();
+parser.add_argument('-target', '-i', type=str, help='Image of target face to scan for.', required=True)
+parser.add_argument('-video', '-v', type=str, help='Video to process', required=True)
+parser.add_argument('-tol', '-tolerance', '-t', type=float, help='Tolerance of face detection, lower is stricter. (0.1-1.0)', required=True)
+args = vars(parser.parse_args())
+
+if args['tol'] > 1.0:
+	args['tol'] = 1.0
+elif args['tol'] < 0.1:
+	args['tol'] = 0.1
+
+targfname = args['target']
+vidfname = args['video']
+tol = args['tol']
+
 print("target name: " + targfname)
 print("video filename: " + vidfname)
 
@@ -77,9 +93,11 @@ while(input_video.isOpened()):
 			elif (right - left) > (bottom - top):
 				bottom = top + (right - left)
 			#calculating the diagonal of the cropped face for rotation purposes
-			diagonal = math.sqrt(2*(bottom - top))
+			#diagonal = math.sqrt(2*(bottom - top))
 			#padding = diagonal / 2
+			#alignment script causes images cropped "too closely" to get a bit fucky, so crop them less severely.
 			padding = (bottom - top)/2
+			
 			if((top - padding >= 0) and (bottom + padding <= vidheight) and (left - padding >= 0) and (right + padding <= vidwidth)):
 				croppedframe = frame[int(top - padding):int(bottom + padding), int(left - padding):int(right + padding)]
 				#if the image is too small, resize it to outputsize
