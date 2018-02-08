@@ -11,19 +11,19 @@ import argparse
 #vidfname = input("Input video filename: ")
 #tol = input("Target recognition tolerance (lower is more accurate but may miss faces, 0.1-1.0): ")
 parser = argparse.ArgumentParser();
-parser.add_argument('-target', '-i', type=str, help='Image of target face to scan for.', required=True)
-parser.add_argument('-video', '-v', type=str, help='Video to process', required=True)
-parser.add_argument('-tol', '-tolerance', '-t', type=float, help='Tolerance of face detection, lower is stricter. (0.1-1.0)', required=True)
+parser.add_argument('-i', type=str, help='Image of target face to scan for.', required=True)
+parser.add_argument('-v', type=str, help='Video to process', required=True)
+parser.add_argument('-t', type=float, help='Tolerance of face detection, lower is stricter. (0.1-1.0)', default=0.6)
 args = vars(parser.parse_args())
 
-if args['tol'] > 1.0:
-	args['tol'] = 1.0
-elif args['tol'] < 0.1:
-	args['tol'] = 0.1
+if args['t'] > 1.0:
+	args['t'] = 1.0
+elif args['t'] < 0.1:
+	args['t'] = 0.1
 
-targfname = args['target']
-vidfname = args['video']
-tol = args['tol']
+targfname = args['i']
+vidfname = args['v']
+tol = args['t']
 
 print("target name: " + targfname)
 print("video filename: " + vidfname)
