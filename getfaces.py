@@ -22,10 +22,10 @@ if args['t'] > 1.0:
 elif args['t'] < 0.1:
 	args['t'] = 0.1
 
-targfname = args['i']
-vidfname = args['v']
 tol = args['t']
 xfps = args['f']
+targfname = args['i']
+vidfname = args['v']
 
 if xfps < 1:
 	xfps = 1
@@ -39,9 +39,12 @@ if(cv2.ocl.haveOpenCL()):
 	print("Using OpenCL: " + str(cv2.ocl.useOpenCL()) + ".")
 
 target_image = face_recognition.load_image_file(targfname)
+outdir = str(str(os.path.splitext(targfname)[0]) + "_output");
 
 #check if output directory already exists, and if not, create it
-os.makedirs(str(str(os.path.splitext(targfname)[0]) + "_output"), exist_ok=True)
+os.makedirs(outdir, exist_ok=True)
+
+print("Output directory: " + outdir + ".")
 
 try:
 	target_encoding = face_recognition.face_encodings(target_image)[0]
@@ -55,12 +58,12 @@ framenum = 0
 vidheight = input_video.get(4)
 vidwidth = input_video.get(3)
 vidfps = input_video.get(cv2.CAP_PROP_FPS)
+totalframes = input_video.get(cv2.CAP_PROP_FRAME_COUNT)
+outputsize = 256, 256
 
 if xfps > vidfps:
 	xfps = vidfps
 
-totalframes = input_video.get(cv2.CAP_PROP_FRAME_COUNT)
-outputsize = 256, 256
 print("Frame Width: " + str(vidwidth) + ", Height: " + str(vidheight) + ".")
 
 known_faces = [
@@ -82,7 +85,7 @@ while(input_video.isOpened()):
 		break
 
 	percentage = (framenum/totalframes)*100
-	print("Checking frame " + str(int(framenum)) + str(" (%.2f%%)" % percentage))
+	print("Checking frame " + str(int(framenum)) + "/" + str(int(totalframes)) + str(" (%.2f%%)" % percentage))
 	
 	rgb_frame = frame[:, :, ::-1]
 	
