@@ -27,6 +27,9 @@ vidfname = args['v']
 tol = args['t']
 xfps = args['f']
 
+if xfps < 1:
+	xfps = 1
+
 print("Target filename: " + targfname + ".")
 print("Video filename: " + vidfname + ".")
 print("Tolerance: " + str(tol) + ".")
