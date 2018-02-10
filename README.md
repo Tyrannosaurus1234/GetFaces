@@ -26,4 +26,4 @@ numpy
 
 face_recognition
 
-opencv-python
+opencv-python >= 3.31
