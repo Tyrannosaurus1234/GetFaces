@@ -74,8 +74,17 @@ known_faces = [
 def random_string(length):
 	return ''.join(random.choice(string.ascii_letters) for m in range(length))
 
+def get_encodings(directory):
+	for file in os.listdir("./" + directory + "/"):
+		imgl = face_recognition.load_image_file("./" + directory + "/" + file)
+		enc = face_recognition.face_encodings(enc)[0]
+		known_faces.append(enc)
+
 #switch to output directory
 os.chdir(str(os.path.splitext(targfname)[0]) + "_output")
+
+#spacer
+print(" ")
 
 while(input_video.isOpened()):
 	input_video.set(1, (framenum + (vidfps/xfps)))
@@ -86,7 +95,7 @@ while(input_video.isOpened()):
 		break
 
 	percentage = (framenum/totalframes)*100
-	print("Checking frame " + str(int(framenum)) + "/" + str(int(totalframes)) + str(" (%.2f%%)" % percentage))
+	print("Processing frame " + str(int(framenum)) + "/" + str(int(totalframes)) + str(" (%.2f%%)" % percentage), end='\r')
 	
 	rgb_frame = frame[:, :, ::-1]
 	
@@ -104,23 +113,23 @@ while(input_video.isOpened()):
 		elif istarget[0] and (args['c'].lower() == 'true'):
 			top, right, bottom, left = floc
 			facefound = True
+
 			#squaring it up
 			if (bottom - top) > (right - left):
 				right = left + (bottom - top)
 			elif (right - left) > (bottom - top):
 				bottom = top + (right - left)
-			#calculating the diagonal of the cropped face for rotation purposes
-			#diagonal = math.sqrt(2*(bottom - top))
-			#padding = diagonal / 2
-			#alignment script causes images cropped "too closely" to get a bit fucky, so crop them less severely.
+
 			padding = (bottom - top)/2
 			
 			if((top - padding >= 0) and (bottom + padding <= vidheight) and (left - padding >= 0) and (right + padding <= vidwidth)):
 				croppedframe = frame[int(top - padding):int(bottom + padding), int(left - padding):int(right + padding)]
+				
 				#if the image is too small, resize it to outputsize
 				cheight, cwidth, cchannels = croppedframe.shape
 				if (cheight < 256) or (cwidth < 256):
 					croppedframe = cv2.resize(croppedframe, outputsize, interpolation=cv2.INTER_CUBIC)
-				print("Writing image.")
+
+				#print("Writing image.                                   ", end='\r')
 				cv2.imwrite(("0" + random_string(15) + ".jpg"), croppedframe, [int(cv2.IMWRITE_JPEG_QUALITY), 98])
 input_video.release()
